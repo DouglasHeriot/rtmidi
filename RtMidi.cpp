@@ -727,6 +727,8 @@ namespace rtmidi {
 		if ( anyStrings )
 			return result;
 
+		CFRelease( result );
+
 		// Here, either the endpoint had no connections, or we failed to obtain names
 		return EndpointName( endpoint, false );
 	}
