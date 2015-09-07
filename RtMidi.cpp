@@ -689,7 +689,7 @@ namespace rtmidi {
 
 		// Does the endpoint have connections?
 		CFDataRef connections = NULL;
-		int nConnected = 0;
+		CFIndex nConnected = 0;
 		bool anyStrings = false;
 		err = MIDIObjectGetDataProperty( endpoint, kMIDIPropertyConnectionUniqueID, &connections );
 		if ( connections != NULL ) {
@@ -1053,7 +1053,7 @@ namespace rtmidi {
 				// (some drivers do this though they shouldn't)
 				if (entityname.substr(0,devicename.length())
 				    == devicename) {
-					int start = devicename.length();
+					size_t start = devicename.length();
 					while (isspace(entityname[start]))
 						start++;
 					entityname = entityname.substr(start);
@@ -1734,7 +1734,7 @@ namespace rtmidi {
 		}
 
 		CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
-		unsigned int nSrc = MIDIGetNumberOfSources();
+		ItemCount nSrc = MIDIGetNumberOfSources();
 		if (nSrc < 1) {
 			error(RTMIDI_ERROR(gettext_noopt("No MIDI input sources found."),
 					   Error::NO_DEVICES_FOUND));
@@ -1893,7 +1893,7 @@ namespace rtmidi {
 	unsigned int MidiInCore :: getPortCount()
 	{
 		CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
-		return MIDIGetNumberOfSources();
+		return (unsigned int)MIDIGetNumberOfSources();
 	}
 
 	std::string MidiInCore :: getPortName( unsigned int portNumber )
@@ -1951,7 +1951,7 @@ namespace rtmidi {
 	unsigned int MidiOutCore :: getPortCount()
 	{
 		CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
-		return MIDIGetNumberOfDestinations();
+		return (unsigned int)MIDIGetNumberOfDestinations();
 	}
 
 	std::string MidiOutCore :: getPortName( unsigned int portNumber )
@@ -1986,7 +1986,7 @@ namespace rtmidi {
 		}
 
 		CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
-		unsigned int nDest = MIDIGetNumberOfDestinations();
+		ItemCount nDest = MIDIGetNumberOfDestinations();
 		if (nDest < 1) {
 			error(RTMIDI_ERROR(gettext_noopt("No MIDI output destinations found."),
 					   Error::NO_DEVICES_FOUND) );
@@ -2134,7 +2134,7 @@ namespace rtmidi {
 	
 	void MidiOutCore :: sendMessage( std::vector<unsigned char> &message )
 	{
-		unsigned int nBytes = message.size();
+		size_t nBytes = message.size();
 		if ( nBytes == 0 ) {
 			error(RTMIDI_ERROR(gettext_noopt("No data in message argument."),
 					   Error::WARNING));
