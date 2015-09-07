@@ -395,7 +395,7 @@ namespace rtmidi {
 
 
 	MidiApi :: MidiApi( void )
-		: apiData_( 0 ), connected_( false ), errorCallback_(0)
+		: apiData_( 0 ), connected_( false ), errorCallback_(0), firstErrorOccurred_( false )
 	{
 	}
 
@@ -416,17 +416,15 @@ namespace rtmidi {
 	void MidiApi :: error(Error e)
 	{
 		if ( errorCallback_ ) {
-			static bool firstErrorOccured = false;
-
-			if ( firstErrorOccured )
+			if ( firstErrorOccurred_ )
 				return;
 
-			firstErrorOccured = true;
+			firstErrorOccurred_ = true;
 			std::ostringstream s;
 			e.printMessage(s);
 
 			errorCallback_->rtmidi_error(e);
-			firstErrorOccured = false;
+			firstErrorOccurred_ = false;
 			return;
 		}
 
@@ -729,6 +727,8 @@ namespace rtmidi {
 		}
 		if ( anyStrings )
 			return result;
+		
+		CFRelease( result );
 
 		// Here, either the endpoint had no connections, or we failed to obtain names
 		return EndpointName( endpoint, false );
@@ -1801,7 +1801,7 @@ namespace rtmidi {
 
 		connected_ = true;
 	}
-
+	
 	void MidiInCore :: openVirtualPort( const std::string portName )
 	{
 		CoreMidiData *data = static_cast<CoreMidiData *> (apiData_);
@@ -1951,14 +1951,14 @@ namespace rtmidi {
 		CoreMidiData *data = static_cast<CoreMidiData *> (apiData_);
 		delete data;
 	}
-
+	
 	void MidiOutCore :: initialize( const std::string& clientName )
 	{
 		// Save our api-specific connection information.
 		CoreMidiData *data = (CoreMidiData *) new CoreMidiData(clientName);
 		apiData_ = (void *) data;
 	}
-
+	
 	unsigned int MidiOutCore :: getPortCount()
 	{
 		CFRunLoopRunInMode( kCFRunLoopDefaultMode, 0, false );
@@ -2140,98 +2140,50 @@ namespace rtmidi {
 			return PortList();
 		}
 	}
-
-
-	// Not necessary if we don't treat sysex messages any differently than
-	// normal messages ... see below.
-	//static void sysexCompletionProc( MIDISysexSendRequest *sreq )
-	//{
-	//  free( sreq );
-	//}
-
+	
 	void MidiOutCore :: sendMessage( std::vector<unsigned char> &message )
 	{
-		// We use the MIDISendSysex() function to asynchronously send sysex
-		// messages.  Otherwise, we use a single CoreMidi MIDIPacket.
 		unsigned int nBytes = message.size();
 		if ( nBytes == 0 ) {
 			error(RTMIDI_ERROR(gettext_noopt("No data in message argument."),
 					   Error::WARNING));
 			return;
 		}
-
-		//  unsigned int packetBytes, bytesLeft = nBytes;
-		//  unsigned int messageIndex = 0;
+		
 		MIDITimeStamp timeStamp = AudioGetCurrentHostTime();
 		CoreMidiData *data = static_cast<CoreMidiData *> (apiData_);
 		OSStatus result;
-
-		/*
-		// I don't think this code is necessary.  We can send sysex
-		// messages through the normal mechanism.  In addition, this avoids
-		// the problem of virtual ports not receiving sysex messages.
-
-		if ( message.at(0) == 0xF0 ) {
-
-		// Apple's fantastic API requires us to free the allocated data in
-		// the completion callback but trashes the pointer and size before
-		// we get a chance to free it!!  This is a somewhat ugly hack
-		// submitted by ptarabbia that puts the sysex buffer data right at
-		// the end of the MIDISysexSendRequest structure.  This solution
-		// does not require that we wait for a previous sysex buffer to be
-		// sent before sending a new one, which was the old way we did it.
-		MIDISysexSendRequest *newRequest = (MIDISysexSendRequest *) malloc(sizeof(struct MIDISysexSendRequest) + nBytes);
-		char * sysexBuffer = ((char *) newRequest) + sizeof(struct MIDISysexSendRequest);
-
-		// Copy data to buffer.
-		for ( unsigned int i=0; i<nBytes; ++i ) sysexBuffer[i] = message.at(i);
-
-		newRequest->destination = data->destinationId;
-		newRequest->data = (Byte *)sysexBuffer;
-		newRequest->bytesToSend = nBytes;
-		newRequest->complete = 0;
-		newRequest->completionProc = sysexCompletionProc;
-		newRequest->completionRefCon = newRequest;
-
-		result = MIDISendSysex(newRequest);
-		if ( result != noErr ) {
-		free( newRequest );
-		errorString_ = "MidiOutCore::sendMessage: ";
-		error(RTMIDI_ERROR(gettext_noopt("Error sending MIDI to virtual destinations."),
-		Error::WARNING, errorString_ );
-		return;
-		}
-		return;
-		}
-		else if ( nBytes > 3 ) {
-		errorString_ = "MidiOutCore::sendMessage: message format problem ... not sysex but > 3 bytes?";
-		error(RTMIDI_ERROR(gettext_noopt(""),
-			             Error::WARNING, errorString_ );
-		return;
-		}
-		*/
-
-		MIDIPacketList packetList;
-		MIDIPacket *packet = MIDIPacketListInit( &packetList );
-		packet = MIDIPacketListAdd( &packetList, sizeof(packetList), packet, timeStamp, nBytes, (const Byte *) &message.at( 0 ) );
-		if ( !packet ) {
-			error(RTMIDI_ERROR(gettext_noopt("Could not allocate packet list."),
-					   Error::DRIVER_ERROR) );
+		
+		if ( message.at(0) != 0xF0 && nBytes > 3 ) {
+			error(RTMIDI_ERROR(gettext_noopt("MidiOutCore::sendMessage: message format problem ... not sysex but > 3 bytes?"), Error::WARNING));
 			return;
+		}
+		
+		Byte buffer[nBytes+(sizeof(MIDIPacketList))];
+		ByteCount listSize = sizeof(buffer);
+		MIDIPacketList *packetList = (MIDIPacketList*)buffer;
+		MIDIPacket *packet = MIDIPacketListInit( packetList );
+
+		ByteCount remainingBytes = nBytes;
+		while (remainingBytes && packet) {
+			ByteCount bytesForPacket = remainingBytes > 65535 ? 65535 : remainingBytes; // 65535 = maximum size of a MIDIPacket
+			const Byte* dataStartPtr = (const Byte *) &message.at( nBytes - remainingBytes );
+			packet = MIDIPacketListAdd( packetList, listSize, packet, timeStamp, bytesForPacket, dataStartPtr);
+			remainingBytes -= bytesForPacket;
 		}
 
 		// Send to any destinations that may have connected to us.
 		if ( data->localEndpoint ) {
-			result = MIDIReceived( data->localEndpoint, &packetList );
+			result = MIDIReceived( data->localEndpoint, packetList );
 			if ( result != noErr ) {
 				error(RTMIDI_ERROR(gettext_noopt("Error sending MIDI to virtual destinations."),
 						   Error::WARNING) );
 			}
 		}
-
+		
 		// And send to an explicit destination port if we're connected.
 		if ( connected_ ) {
-			result = MIDISend( data->localPort, data->getEndpoint(), &packetList );
+			result = MIDISend( data->localPort, data->getEndpoint(), packetList );
 			if ( result != noErr ) {
 				error(RTMIDI_ERROR(gettext_noopt("Error sending MIDI message to port."),
 						   Error::WARNING) );
@@ -3090,7 +3042,8 @@ namespace rtmidi {
 			snd_seq_port_info_set_port( pinfo, -1 );
 			while ( snd_seq_query_next_port( seq, pinfo ) >= 0 ) {
 				unsigned int atyp = snd_seq_port_info_get_type( pinfo );
-				if ( ( atyp & SND_SEQ_PORT_TYPE_MIDI_GENERIC ) == 0 ) continue;
+				if ( ( atyp & SND_SEQ_PORT_TYPE_MIDI_GENERIC ) == 0  &&
+					( atyp & SND_SEQ_PORT_TYPE_SYNTH ) == 0 ) continue;
 				unsigned int caps = snd_seq_port_info_get_capability( pinfo );
 				if ( ( caps & type ) != type ) continue;
 				if ( count == portNumber ) return 1;
@@ -3102,7 +3055,7 @@ namespace rtmidi {
 		if ( portNumber < 0 ) return count;
 		return 0;
 	}
-
+	
 	unsigned int MidiInAlsa :: getPortCount()
 	{
 		snd_seq_port_info_t *pinfo;
@@ -3139,7 +3092,7 @@ namespace rtmidi {
 				    Error::WARNING) );
 		return stringName;
 	}
-
+	
 	void MidiInAlsa :: openPort( unsigned int portNumber, const std::string & portName )
 	{
 		if ( connected_ ) {
@@ -4522,6 +4475,14 @@ namespace rtmidi{
 #else
 		stringName = std::string( deviceCaps.szPname );
 #endif
+
+		// Next lines added to add the portNumber to the name so that 
+		// the device's names are sure to be listed with individual names
+		// even when they have the same brand name
+		std::ostringstream os;
+		os << " ";
+		os << portNumber;
+		stringName += os.str();
 
 		return stringName;
 	}

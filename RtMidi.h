@@ -347,7 +347,7 @@ namespace rtmidi {
 	template<class T>
 	using Pointer = std::shared_ptr<T>;
 #endif
-
+	
 	class MidiApi;
 	class MidiInApi;
 	class MidiOutApi;
@@ -644,6 +644,7 @@ namespace rtmidi {
 		bool connected_;
 		std::string errorString_;
 		ErrorInterface * errorCallback_;
+		bool firstErrorOccurred_;
 	};
 #undef RTMIDI_CLASSNAME
 
