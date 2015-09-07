@@ -1246,30 +1246,24 @@ namespace rtmidi {
 			scoped_lock lock (mutex);
 			MIDIPortRef port = 0;
 			OSStatus result;
+			
+			CFStringRef name = CFStringCreateWithCString(NULL, portName.c_str(), kCFStringEncodingUTF8 );
+			
 			switch (flags) {
 			case PortDescriptor::INPUT:
-				result = MIDIInputPortCreate(seq,
-							      CFStringCreateWithCString(
-								      NULL,
-								      portName.c_str(),
-								      kCFStringEncodingUTF8 ),
-							     MidiInCore::midiInputCallback,
-							      (void *)data,
-							      &port);
+				result = MIDIInputPortCreate(seq, name, MidiInCore::midiInputCallback, (void *)data, &port);
 				break;
 			case PortDescriptor::OUTPUT:
-				result
-					= MIDIOutputPortCreate(seq,
-							       CFStringCreateWithCString(
-								       NULL,
-								       portName.c_str(),
-								       kCFStringEncodingUTF8 ),
-							       &port);
+				result = MIDIOutputPortCreate(seq, name, &port);
 				break;
 			default:
+				CFRelease( name );
 				throw RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI port because of invalid port flags."),
 						   Error::INVALID_PARAMETER);
 			}
+			
+			CFRelease( name );
+			
 			if ( result != noErr ) {
 				throw RTMIDI_ERROR(gettext_noopt("Error creating OS-X MIDI port."),
 						   Error::DRIVER_ERROR);
@@ -1285,31 +1279,24 @@ namespace rtmidi {
 			scoped_lock lock (mutex);
 			MIDIEndpointRef port = 0;
 			OSStatus result;
+			
+			CFStringRef name = CFStringCreateWithCString(NULL, portName.c_str(), kCFStringEncodingUTF8 );
+			
 			switch (flags) {
 			case PortDescriptor::INPUT:
-				result
-					= MIDIDestinationCreate(seq,
-								CFStringCreateWithCString(
-									NULL,
-									portName.c_str(),
-									kCFStringEncodingUTF8 ),
-								MidiInCore::midiInputCallback,
-								(void *)data,
-								&port);
+				result = MIDIDestinationCreate(seq, name, MidiInCore::midiInputCallback, (void *)data, &port);
 				break;
 			case PortDescriptor::OUTPUT:
-				result
-					= MIDISourceCreate(seq,
-							   CFStringCreateWithCString(
-								   NULL,
-								   portName.c_str(),
-								   kCFStringEncodingUTF8 ),
-							   &port);
+				result = MIDISourceCreate(seq, name, &port);
 				break;
 			default:
+				CFRelease( name );
 				throw RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI port because of invalid port flags."),
 						   Error::INVALID_PARAMETER);
 			}
+			
+			CFRelease( name );
+			
 			if ( result != noErr ) {
 				throw RTMIDI_ERROR(gettext_noopt("Error creating OS-X MIDI port."),
 						   Error::DRIVER_ERROR);
@@ -1765,9 +1752,10 @@ namespace rtmidi {
 
 		MIDIPortRef port;
 		CoreMidiData *data = static_cast<CoreMidiData *> (apiData_);
-		OSStatus result = MIDIInputPortCreate( data->client,
-						       CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingUTF8 ),
-						       midiInputCallback, (void *)this, &port );
+		CFStringRef name = CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingUTF8 );
+		OSStatus result = MIDIInputPortCreate( data->client, name, midiInputCallback, (void *)this, &port );
+		CFRelease( name );
+		
 		if ( result != noErr ) {
 			MIDIClientDispose( data->client );
 			error(RTMIDI_ERROR(gettext_noopt("Error creating OS-X MIDI input port."),
@@ -1808,9 +1796,10 @@ namespace rtmidi {
 
 		// Create a virtual MIDI input destination.
 		MIDIEndpointRef endpoint;
-		OSStatus result = MIDIDestinationCreate( data->client,
-							 CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingUTF8 ),
-							 midiInputCallback, (void *)this, &endpoint );
+		CFStringRef name = CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingUTF8 );
+		OSStatus result = MIDIDestinationCreate( data->client, name, midiInputCallback, (void *)this, &endpoint );
+		CFRelease( name );
+		
 		if ( result != noErr ) {
 			error(RTMIDI_ERROR(gettext_noopt("Error creating virtual OS-X MIDI destination."),
 					   Error::DRIVER_ERROR) );
@@ -2012,9 +2001,10 @@ namespace rtmidi {
 
 		MIDIPortRef port;
 		CoreMidiData *data = static_cast<CoreMidiData *> (apiData_);
-		OSStatus result = MIDIOutputPortCreate( data->client,
-							CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingUTF8 ),
-							&port );
+		CFStringRef name = CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingUTF8 );
+		OSStatus result = MIDIOutputPortCreate( data->client, name, &port );
+		CFRelease( name );
+		
 		if ( result != noErr ) {
 			MIDIClientDispose( data->client );
 			error(RTMIDI_ERROR(gettext_noopt("Error creating OS-X MIDI output port."),
@@ -2059,9 +2049,10 @@ namespace rtmidi {
 
 		// Create a virtual MIDI output source.
 		MIDIEndpointRef endpoint;
-		OSStatus result = MIDISourceCreate( data->client,
-						    CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingUTF8 ),
-						    &endpoint );
+		CFStringRef name = CFStringCreateWithCString( NULL, portName.c_str(), kCFStringEncodingUTF8 );
+		OSStatus result = MIDISourceCreate( data->client, name, &endpoint );
+		CFRelease( name );
+		
 		if ( result != noErr ) {
 			error(RTMIDI_ERROR(gettext_noopt("Error creating OS-X virtual MIDI source."),
 					   Error::DRIVER_ERROR) );
