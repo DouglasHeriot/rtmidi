@@ -1051,11 +1051,15 @@ namespace rtmidi {
 				}
 				// does the entity name already start with the device name?
 				// (some drivers do this though they shouldn't)
-				if (entityname.substr(0,devicename.length())
-				    == devicename) {
+				if (entityname.substr(0,devicename.length()) == devicename) {
 					size_t start = devicename.length();
-					while (isspace(entityname[start]))
+					const size_t size = entityname.length();
+					
+					// Make sure we don't go off the end of the string
+					// Must check start < size first, otherwise isspace() will read off the end!
+					while (start < size && isspace(entityname[start]))
 						start++;
+					
 					entityname = entityname.substr(start);
 				}
 			}
