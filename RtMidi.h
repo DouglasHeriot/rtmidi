@@ -159,6 +159,16 @@ namespace rtmidi {
 	 */
 	RTMIDI_DEPRECATED(typedef void (*MidiCallback)( double timeStamp, std::vector<unsigned char> *message, void *userData),"RtMidi now provides a class MidiInterface for MIDI callbacks");
 
+	
+	// Ignore deprecated warnings here, from using old MidiCallback
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4995)
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#endif
+	
 	//! Compatibility interface to hold a C style callback function
 	struct CompatibilityMidiInterface: MidiInterface {
 		CompatibilityMidiInterface(MidiCallback cb, void * ud):
@@ -171,6 +181,12 @@ namespace rtmidi {
 		MidiCallback callback;
 		void * userData;
 	};
+	
+#ifdef _MSC_VER
+#pragma warning(pop)
+#else
+#pragma GCC diagnostic pop
+#endif
 
 	/************************************************************************/
 	/*! \class Error
@@ -1651,7 +1667,17 @@ namespace rtmidi {
 
 }
 
-typedef rtmidi::Midi RTMIDI_DEPRECATED(RtMidi,"RtMidi has been replaced by rtmidi::Midi");
+typedef rtmidi::Midi RTMIDI_DEPRECATED(RtMidi, "RtMidi has been replaced by rtmidi::Midi");
+typedef rtmidi::Error RTMIDI_DEPRECATED(RtMidiError, "RtMidiError has been replaced by rtmidi::Error");
+
+// Ignore deprecated warnings here, from using RtMidi namespace and API types.
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4995)
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#endif
 
 class RtMidiIn: public rtmidi::MidiIn {
 public:
@@ -1661,6 +1687,7 @@ public:
 	MidiIn((rtmidi::ApiType)api,
 		clientName) {}
 };
+
 class RtMidiOut: public rtmidi::MidiOut {
 public:
 	RTMIDI_DEPRECATED(RtMidiOut( RtMidi::Api api = RtMidi::UNSPECIFIED,
@@ -1669,5 +1696,12 @@ public:
 	MidiOut((rtmidi::ApiType)api,
 		clientName) {}
 };
-typedef rtmidi::Error   RtMidiError;
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#else
+#pragma GCC diagnostic pop
+#endif
+
+			
 #endif
