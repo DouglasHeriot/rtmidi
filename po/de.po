@@ -134,22 +134,22 @@ msgstr ""
 "Rückruf-Funktion (engl. callback) abgefangen werden."
 
 #: RtMidi.cpp:1154
-msgid "Could not get the unique identifier of a midi endpoint."
+msgid "Could not get the unique identifier of a MIDI endpoint. %s"
 msgstr ""
 "Konnte die eindeutige Identifikation (UUID) eines MIDI-Endpunktes nicht "
-"bekommen."
+"bekommen. %s"
 
 #: RtMidi.cpp:1165
 msgid ""
-"Could not get the endpoint back from the unique identifier of a midi "
-"endpoint."
+"Could not get the endpoint back from the unique identifier of a MIDI "
+"endpoint. %s"
 msgstr ""
 "Konnte den MIDI-Endpunkt einer eindeutige Identifikation (UUID) nicht "
-"bekommen."
+"bekommen. %s"
 
 #: RtMidi.cpp:1181
-msgid "Could not get the entity of a midi endpoint."
-msgstr "Konnte die Geräteeinheit eines MIDI-Endpunktes nicht bekommen."
+msgid "Could not get the entity of a MIDI endpoint. %s"
+msgstr "Konnte die Geräteeinheit eines MIDI-Endpunktes nicht bekommen. %s"
 
 #: RtMidi.cpp:1258 RtMidi.cpp:1298
 msgid "Error creating OS X MIDI port because of invalid port flags."
@@ -158,12 +158,12 @@ msgstr ""
 "angegeben wurden."
 
 #: RtMidi.cpp:1262 RtMidi.cpp:1302 RtMidi.cpp:1804
-msgid "Error creating OS X MIDI port."
-msgstr "Es gab einen Fehler beim Erzeugen der MIDI-Schnittstelle."
+msgid "Error creating OS X MIDI port. %s"
+msgstr "Es gab einen Fehler beim Erzeugen der MIDI-Schnittstelle. %s"
 
 #: RtMidi.cpp:1355
-msgid "Error creating OS X MIDI client object."
-msgstr "Fehler beim erzeugen des OS-X-MIDI-Klienten."
+msgid "Error creating OS X MIDI client object. %s"
+msgstr "Fehler beim erzeugen des OS-X-MIDI-Klienten. %s"
 
 #: RtMidi.cpp:1693 RtMidi.cpp:1785 RtMidi.cpp:1939 RtMidi.cpp:2035
 #: RtMidi.cpp:3052 RtMidi.cpp:3169 RtMidi.cpp:3419 RtMidi.cpp:3567
@@ -184,20 +184,20 @@ msgid "The 'portNumber' argument (%d) is invalid."
 msgstr "Die Portnummer %d ist ungültig."
 
 #: RtMidi.cpp:1722
-msgid "Error creating OS X MIDI input port."
-msgstr "Fehler beim Erzeugen der OS-X-MIDI-Eingabe-Schnittstelle."
+msgid "Error creating OS X MIDI input port. %s"
+msgstr "Fehler beim Erzeugen der OS-X-MIDI-Eingabe-Schnittstelle. %s"
 
 #: RtMidi.cpp:1732
 msgid "Error getting MIDI input source reference."
 msgstr "Konnte keine Referenz zum MIDI-Eingang bekommen."
 
 #: RtMidi.cpp:1742
-msgid "Error connecting OS X MIDI input port."
-msgstr "Fehler beim verbinden mit dem OS-X-MIDI-Eingang."
+msgid "Error connecting OS X MIDI input port. %s"
+msgstr "Fehler beim verbinden mit dem OS-X-MIDI-Eingang. %s"
 
 #: RtMidi.cpp:1764
-msgid "Error creating virtual OS X MIDI destination."
-msgstr "Konnte den virtuellen OS-X-MIDI-Ausgang nicht erzeugen."
+msgid "Error creating virtual OS X MIDI destination. %s"
+msgstr "Konnte den virtuellen OS-X-MIDI-Ausgang nicht erzeugen. %s"
 
 #: RtMidi.cpp:1780 RtMidi.cpp:2030 RtMidi.cpp:3164 RtMidi.cpp:3562
 #: RtMidi.cpp:5305 RtMidi.cpp:5594
@@ -217,8 +217,8 @@ msgid "No MIDI output destinations found."
 msgstr "Es wurden keine MIDI-Ausgabegeräte gefunden."
 
 #: RtMidi.cpp:1968
-msgid "Error creating OS X MIDI output port."
-msgstr "Fehler beim Erzeugen der OS-X-MIDI-Ausgabe-Schnittstelle."
+msgid "Error creating OS X MIDI output port. %s"
+msgstr "Fehler beim Erzeugen der OS-X-MIDI-Ausgabe-Schnittstelle. %s"
 
 #: RtMidi.cpp:1978
 msgid "Error getting MIDI output destination reference."
@@ -229,20 +229,23 @@ msgid "A virtual output port already exists."
 msgstr "Es gibt schon einen virtuellen MIDI-Ausgang."
 
 #: RtMidi.cpp:2014
-msgid "Error creating OS X virtual MIDI source."
-msgstr "Konnte den virtuellen OS-X-MIDI-Eingang nicht erzeugen."
+msgid "Error creating OS X virtual MIDI source. %s"
+msgstr "Konnte den virtuellen OS-X-MIDI-Eingang nicht erzeugen. %s"
 
 #: RtMidi.cpp:2153
 msgid "Could not allocate packet list."
 msgstr "Konnte die Paketliste nicht anlegen."
 
 #: RtMidi.cpp:2162
-msgid "Error sending MIDI to virtual destinations."
-msgstr "Konnte MIDI-Daten nicht zu virtuellen Ausgängen senden."
+msgid "Error sending MIDI to virtual destinations. %s"
+msgstr "Konnte MIDI-Daten nicht zu virtuellen Ausgängen senden. %s"
 
 #: RtMidi.cpp:2171 RtMidi.cpp:3548
 msgid "Error sending MIDI message to port."
 msgstr "Fehler beim Senden der MIDI-Nachricht zum Ausgang."
+
+msgid "Error sending MIDI message to port. %s"
+msgstr "Fehler beim Senden der MIDI-Nachricht zum Ausgang. %s"
 
 #: RtMidi.cpp:2374 RtMidi.cpp:2636 RtMidi.cpp:3113 RtMidi.cpp:3174
 #: RtMidi.cpp:3465

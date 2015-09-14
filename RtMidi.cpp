@@ -595,14 +595,34 @@ namespace rtmidi {
 
 
 namespace rtmidi {
-		/*! An abstraction layer for the CORE sequencer layer. It provides
-	  the following functionality:
-	  - dynamic allocation of the sequencer
-	  - optionallay avoid concurrent access to the CORE sequencer,
-	  which is not thread proof. This feature is controlled by
-	  the parameter \ref locking.
-	*/
-
+	
+	// OSStatus are just 4 characters packed into an int
+	// This function is based on Apple example code in CoreAudio/PublicUtility/CAXException.h
+	// https://developer.apple.com/library/ios/samplecode/CoreAudioUtilityClasses/Listings/CoreAudio_PublicUtility_CAXException_h.html
+	// Found at http://stackoverflow.com/a/2197587/466698
+	
+	static std::string OSStatusToString(OSStatus error)
+	{
+		// see if it appears to be a 4-char-code
+		
+		UInt32 bigEndianError = CFSwapInt32HostToBig(error);
+		
+		char str[4];
+		memcpy(str, &bigEndianError, 4);
+		
+		if (isprint(str[0]) && isprint(str[1]) && isprint(str[2]) && isprint(str[3]))
+		{
+			return std::string(str, 4);
+		}
+		else
+		{
+			// no, format it as an integer
+			std::ostringstream out;
+			out << error;
+			return out.str();
+		}
+	}
+	
 	// This function was submitted by Douglas Casey Tucker and apparently
 	// derived largely from PortMidi.
 	// or copied from the Apple developer Q&A website
@@ -736,6 +756,13 @@ namespace rtmidi {
 
 
 #define RTMIDI_CLASSNAME "CoreSequencer"
+	/*! An abstraction layer for the CORE sequencer layer. It provides
+	 the following functionality:
+	 - dynamic allocation of the sequencer
+	 - optionallay avoid concurrent access to the CORE sequencer,
+	 which is not thread proof. This feature is controlled by
+	 the parameter \ref locking.
+	 */
 	template <int locking=1>
 	class CoreSequencer {
 	public:
@@ -1181,8 +1208,8 @@ namespace rtmidi {
 								     kMIDIPropertyUniqueID,
 								     &uid);
 				if (stat != noErr) {
-					throw RTMIDI_ERROR(gettext_noopt("Could not get the unique identifier of a midi endpoint."),
-							     Error::WARNING);
+					throw RTMIDI_ERROR1(gettext_noopt("Could not get the unique identifier of a MIDI endpoint. %s"),
+							     Error::WARNING, OSStatusToString(stat).c_str());
 					return 0;
 				}
 				MIDIObjectRef obj;
@@ -1191,8 +1218,8 @@ namespace rtmidi {
 								 &obj,
 								 &type);
 				if (stat != noErr || obj != port) {
-					throw RTMIDI_ERROR(gettext_noopt("Could not get the endpoint back from the unique identifier of a midi endpoint."),
-							   Error::WARNING);
+					throw RTMIDI_ERROR1(gettext_noopt("Could not get the endpoint back from the unique identifier of a MIDI endpoint. %s"),
+							   Error::WARNING, OSStatusToString(stat).c_str());
 					return 0;
 				}
 				if (type == kMIDIObjectType_Source
@@ -1206,8 +1233,8 @@ namespace rtmidi {
 				}
 
 			} else if (stat != noErr) {
-				throw RTMIDI_ERROR(gettext_noopt("Could not get the entity of a midi endpoint."),
-						   Error::WARNING);
+				throw RTMIDI_ERROR1(gettext_noopt("Could not get the entity of a MIDI endpoint. %s"),
+						   Error::WARNING, OSStatusToString(stat).c_str());
 				return 0;
 			}
 			/* Theoretically Mac OS X could silently use
@@ -1269,8 +1296,8 @@ namespace rtmidi {
 			CFRelease( name );
 			
 			if ( result != noErr ) {
-				throw RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI port."),
-						   Error::DRIVER_ERROR);
+				throw RTMIDI_ERROR1(gettext_noopt("Error creating OS X MIDI port. %s"),
+						   Error::DRIVER_ERROR, OSStatusToString(result).c_str());
 			}
 			return port;
 		}
@@ -1302,8 +1329,8 @@ namespace rtmidi {
 			CFRelease( name );
 			
 			if ( result != noErr ) {
-				throw RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI port."),
-						   Error::DRIVER_ERROR);
+				throw RTMIDI_ERROR1(gettext_noopt("Error creating OS X MIDI port. %s"),
+						   Error::DRIVER_ERROR, OSStatusToString(result).c_str());
 			}
 			return port;
 		}
@@ -1355,8 +1382,8 @@ namespace rtmidi {
 				OSStatus result = MIDIClientCreate(cfname, NULL, NULL, &client );
 				CFRelease(cfname);
 				if ( result != noErr ) {
-					throw RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI client object."),
-							   Error::DRIVER_ERROR);
+					throw RTMIDI_ERROR1(gettext_noopt("Error creating OS X MIDI client object. %s"),
+							   Error::DRIVER_ERROR, OSStatusToString(result).c_str());
 					return;
 				}
 			}
@@ -1762,8 +1789,8 @@ namespace rtmidi {
 		
 		if ( result != noErr ) {
 			MIDIClientDispose( data->client );
-			error(RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI input port."),
-					   Error::DRIVER_ERROR));
+			error(RTMIDI_ERROR1(gettext_noopt("Error creating OS X MIDI input port. %s"),
+					   Error::DRIVER_ERROR, OSStatusToString(result).c_str()));
 			return;
 		}
 
@@ -1782,8 +1809,8 @@ namespace rtmidi {
 		if ( result != noErr ) {
 			MIDIPortDispose( port );
 			MIDIClientDispose( data->client );
-			error(RTMIDI_ERROR(gettext_noopt("Error connecting OS X MIDI input port."),
-					   Error::DRIVER_ERROR) );
+			error(RTMIDI_ERROR1(gettext_noopt("Error connecting OS X MIDI input port. %s"),
+					   Error::DRIVER_ERROR, OSStatusToString(result).c_str()));
 			return;
 		}
 
@@ -1805,8 +1832,8 @@ namespace rtmidi {
 		CFRelease( name );
 		
 		if ( result != noErr ) {
-			error(RTMIDI_ERROR(gettext_noopt("Error creating virtual OS X MIDI destination."),
-					   Error::DRIVER_ERROR) );
+			error(RTMIDI_ERROR1(gettext_noopt("Error creating virtual OS X MIDI destination. %s"),
+					   Error::DRIVER_ERROR, OSStatusToString(result).c_str()));
 			return;
 		}
 
@@ -1845,8 +1872,8 @@ namespace rtmidi {
 					      data->getEndpoint(),
 					      NULL);
 		if ( result != noErr ) {
-			error(RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI port."),
-					   Error::DRIVER_ERROR));
+			error(RTMIDI_ERROR1(gettext_noopt("Error creating OS X MIDI port. %s"),
+					   Error::DRIVER_ERROR, OSStatusToString(result).c_str()));
 		}
 
 		connected_ = true;
@@ -2011,8 +2038,8 @@ namespace rtmidi {
 		
 		if ( result != noErr ) {
 			MIDIClientDispose( data->client );
-			error(RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI output port."),
-					   Error::DRIVER_ERROR) );
+			error(RTMIDI_ERROR1(gettext_noopt("Error creating OS X MIDI output port. %s"),
+					   Error::DRIVER_ERROR, OSStatusToString(result).c_str()));
 			return;
 		}
 
@@ -2058,8 +2085,8 @@ namespace rtmidi {
 		CFRelease( name );
 		
 		if ( result != noErr ) {
-			error(RTMIDI_ERROR(gettext_noopt("Error creating OS X virtual MIDI source."),
-					   Error::DRIVER_ERROR) );
+			error(RTMIDI_ERROR1(gettext_noopt("Error creating OS X virtual MIDI source. %s"),
+					   Error::DRIVER_ERROR, OSStatusToString(result).c_str()));
 			return;
 		}
 
@@ -2171,8 +2198,8 @@ namespace rtmidi {
 		if ( data->localEndpoint ) {
 			result = MIDIReceived( data->localEndpoint, packetList );
 			if ( result != noErr ) {
-				error(RTMIDI_ERROR(gettext_noopt("Error sending MIDI to virtual destinations."),
-						   Error::WARNING) );
+				error(RTMIDI_ERROR1(gettext_noopt("Error sending MIDI to virtual destinations. %s"),
+						   Error::WARNING, OSStatusToString(result).c_str()));
 			}
 		}
 		
@@ -2180,8 +2207,8 @@ namespace rtmidi {
 		if ( connected_ ) {
 			result = MIDISend( data->localPort, data->getEndpoint(), packetList );
 			if ( result != noErr ) {
-				error(RTMIDI_ERROR(gettext_noopt("Error sending MIDI message to port."),
-						   Error::WARNING) );
+				error(RTMIDI_ERROR1(gettext_noopt("Error sending MIDI message to port. %s"),
+						   Error::WARNING, OSStatusToString(result).c_str()));
 			}
 		}
 	}
