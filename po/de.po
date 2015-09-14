@@ -158,11 +158,11 @@ msgstr ""
 "angegeben wurden."
 
 #: RtMidi.cpp:1262 RtMidi.cpp:1302 RtMidi.cpp:1804
-msgid "Error creating OS-X MIDI port."
+msgid "Error creating OS X MIDI port."
 msgstr "Es gab einen Fehler beim Erzeugen der MIDI-Schnittstelle."
 
 #: RtMidi.cpp:1355
-msgid "Error creating OS-X MIDI client object."
+msgid "Error creating OS X MIDI client object."
 msgstr "Fehler beim erzeugen des OS-X-MIDI-Klienten."
 
 #: RtMidi.cpp:1693 RtMidi.cpp:1785 RtMidi.cpp:1939 RtMidi.cpp:2035
@@ -184,7 +184,7 @@ msgid "The 'portNumber' argument (%d) is invalid."
 msgstr "Die Portnummer %d ist ungültig."
 
 #: RtMidi.cpp:1722
-msgid "Error creating OS-X MIDI input port."
+msgid "Error creating OS X MIDI input port."
 msgstr "Fehler beim Erzeugen der OS-X-MIDI-Eingabe-Schnittstelle."
 
 #: RtMidi.cpp:1732
@@ -192,11 +192,11 @@ msgid "Error getting MIDI input source reference."
 msgstr "Konnte keine Referenz zum MIDI-Eingang bekommen."
 
 #: RtMidi.cpp:1742
-msgid "Error connecting OS-X MIDI input port."
+msgid "Error connecting OS X MIDI input port."
 msgstr "Fehler beim verbinden mit dem OS-X-MIDI-Eingang."
 
 #: RtMidi.cpp:1764
-msgid "Error creating virtual OS-X MIDI destination."
+msgid "Error creating virtual OS X MIDI destination."
 msgstr "Konnte den virtuellen OS-X-MIDI-Ausgang nicht erzeugen."
 
 #: RtMidi.cpp:1780 RtMidi.cpp:2030 RtMidi.cpp:3164 RtMidi.cpp:3562
@@ -217,7 +217,7 @@ msgid "No MIDI output destinations found."
 msgstr "Es wurden keine MIDI-Ausgabegeräte gefunden."
 
 #: RtMidi.cpp:1968
-msgid "Error creating OS-X MIDI output port."
+msgid "Error creating OS X MIDI output port."
 msgstr "Fehler beim Erzeugen der OS-X-MIDI-Ausgabe-Schnittstelle."
 
 #: RtMidi.cpp:1978
@@ -229,7 +229,7 @@ msgid "A virtual output port already exists."
 msgstr "Es gibt schon einen virtuellen MIDI-Ausgang."
 
 #: RtMidi.cpp:2014
-msgid "Error creating OS-X virtual MIDI source."
+msgid "Error creating OS X virtual MIDI source."
 msgstr "Konnte den virtuellen OS-X-MIDI-Eingang nicht erzeugen."
 
 #: RtMidi.cpp:2153

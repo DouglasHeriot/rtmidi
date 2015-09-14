@@ -149,7 +149,7 @@ int main()
 {
   // Create an api map.
   std::map<int, std::string> apiMap;
-  apiMap[RtMidi::MACOSX_CORE] = "OS-X CoreMidi";
+  apiMap[RtMidi::MACOSX_CORE] = "OS X CoreMidi";
   apiMap[RtMidi::WINDOWS_MM] = "Windows MultiMedia";
   apiMap[RtMidi::WINDOWS_KS] = "Windows Kernel Straming";
   apiMap[RtMidi::UNIX_JACK] = "Jack Client";
@@ -455,7 +455,7 @@ If you are having problems getting RtMidi to run on your system, try passing the
 
 \section multi Using Simultaneous Multiple APIs
 
-Support for each MIDI API is encapsulated in specific \ref rtmidi::MidiInApi or \ref rtmidi::MidiOutApi subclasses, making it possible to compile and instantiate multiple API-specific subclasses on a given operating system.  For example, one can compile both CoreMIDI and JACK support on the OS-X operating system by providing the appropriate preprocessor definitions for each.  In a run-time situation, one might first attempt to determine whether any JACK ports are available.  This can be done by specifying the api argument rtmidi::UNIX_JACK when attempting to create an instance of rtmidi::MidiIn or rtmidi::MidiOut.  If no available ports are found, then an instance of rtmidi::Midi with the api argument rtmidi::MACOSX_CORE can be created.  Alternately, if no api argument is specified, RtMidi will first look for OS provided ports and if none are found, then software demons (currently JACK) ports (in linux, the search order is ALSA and then JACK).
+Support for each MIDI API is encapsulated in specific \ref rtmidi::MidiInApi or \ref rtmidi::MidiOutApi subclasses, making it possible to compile and instantiate multiple API-specific subclasses on a given operating system.  For example, one can compile both CoreMIDI and JACK support on the OS X operating system by providing the appropriate preprocessor definitions for each.  In a run-time situation, one might first attempt to determine whether any JACK ports are available.  This can be done by specifying the api argument rtmidi::UNIX_JACK when attempting to create an instance of rtmidi::MidiIn or rtmidi::MidiOut.  If no available ports are found, then an instance of rtmidi::Midi with the api argument rtmidi::MACOSX_CORE can be created.  Alternately, if no api argument is specified, RtMidi will first look for OS provided ports and if none are found, then software demons (currently JACK) ports (in linux, the search order is ALSA and then JACK).
 
 It is also possible to use all compiled backends simultaneously by passing the special api argument rtmidi::ALL_API to the constructor. In that case rtmidi::midi::getPortList will return a list of all port descriptors from all backends that are available. On the other hand rtmidi::midi::openVirtualPort will open only one port on the first API that is tested in the automatic port selecton as described above.
 
@@ -475,7 +475,7 @@ Two different MIDI APIs are supported on Linux platforms: <A href="http://www.al
 
 The Apple CoreMIDI API allows for the establishment of virtual input and output ports to which other software applications can connect.
 
-The RtMidi JACK support can be compiled on Macintosh OS-X systems, as well as in Linux.
+The RtMidi JACK support can be compiled on Macintosh OS X systems, as well as in Linux.
 
 \subsection windowsds Windows (Multimedia Library):
 
@@ -498,15 +498,15 @@ In years past, the following people provided bug fixes and improvements:
 <LI>Eduardo Coutinho (Windows device names)</LI>
 <LI>Paul Dean (increment optimization)</LI>
 <LI>Luc Deschenaux (sysex issues)</LI>
-<LI>John Dey (OS-X timestamps)</LI>
+<LI>John Dey (OS X timestamps)</LI>
 <LI>Christoph Eckert (ALSA sysex fixes)</LI>
 <LI>Martin Koegler (various fixes)</LI>
-<LI>Immanuel Litzroth (OS-X sysex fix)</LI>
+<LI>Immanuel Litzroth (OS X sysex fix)</LI>
 <LI>Jon McCormack (Snow Leopard updates)</LI>
 <LI>Tobias Schlemmer (port descriptor API)</LI>
 <LI>Axel Schmidt (client naming)</LI>
 <LI>Alexander Svetalkin (JACK MIDI)</LI>
-<LI>Casey Tucker (OS-X driver information, sysex sending)</LI>
+<LI>Casey Tucker (OS X driver information, sysex sending)</LI>
 <LI>Bastiaan Verreijt (Windows sysex multi-buffer code)</LI>
 <LI>Dan Wilcox</LI>
 </UL>

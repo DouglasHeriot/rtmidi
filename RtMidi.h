@@ -92,7 +92,7 @@ namespace rtmidi {
 	//! MIDI API specifier arguments.
 	enum ApiType {
 		UNSPECIFIED,    /*!< Search for a working compiled API. */
-		MACOSX_CORE,    /*!< Macintosh OS-X Core Midi API. */
+		MACOSX_CORE,    /*!< Macintosh OS X Core Midi API. */
 		LINUX_ALSA,     /*!< The Advanced Linux Sound Architecture API. */
 		UNIX_JACK,      /*!< The JACK Low-Latency MIDI Server API. */
 		WINDOWS_MM,     /*!< The Microsoft Multimedia MIDI API. */
@@ -507,7 +507,7 @@ namespace rtmidi {
 		/*!
 		  This function creates a virtual MIDI port to which other
 		  software applications can connect. This type of functionality
-		  is currently only supported by the Macintosh OS-X, any JACK,
+		  is currently only supported by the Macintosh OS X, any JACK,
 		  and Linux ALSA APIs (the function returns an error for the other APIs).
 
 		  \param portName An optional name for the applicaction port that is
@@ -1009,7 +1009,7 @@ namespace rtmidi {
 	  retrieval using the getMessage() function or immediately passed to
 	  a user-specified callback function.  Create multiple instances of
 	  this class to connect to more than one MIDI device at the same
-	  time.  With the OS-X and Linux ALSA MIDI APIs, it is also possible
+	  time.  With the OS X and Linux ALSA MIDI APIs, it is also possible
 	  to open a virtual input port to which other MIDI software clients
 	  can connect.
 
@@ -1047,7 +1047,7 @@ namespace rtmidi {
 
 		  If no API argument is specified and multiple API support has been
 		  compiled, the default order of use is JACK, ALSA (Linux) and CORE,
-		  JACK (OS-X).
+		  JACK (OS X).
 
 		  \param api        An optional API id can be specified.
 		  \param clientName An optional Client name can be specified. This
@@ -1107,7 +1107,7 @@ namespace rtmidi {
 		/*!
 		  This function creates a virtual MIDI port to which other
 		  software applications can connect. This type of functionality
-		  is currently only supported by the Macintosh OS-X, any JACK,
+		  is currently only supported by the Macintosh OS X, any JACK,
 		  and Linux ALSA APIs (the function returns an error for the other APIs).
 
 		  \param portName An optional name for the application port that is
@@ -1261,7 +1261,7 @@ namespace rtmidi {
 	  connect to one such port, and to send MIDI bytes immediately over
 	  the connection.  Create multiple instances of this class to
 	  connect to more than one MIDI device at the same time.  With the
-	  OS-X and Linux ALSA MIDI APIs, it is also possible to open a
+	  OS X and Linux ALSA MIDI APIs, it is also possible to open a
 	  virtual port to which other MIDI software clients can connect.
 
 	  by Gary P. Scavone, 2003-2014.
@@ -1279,7 +1279,7 @@ namespace rtmidi {
 
 		  If no API argument is specified and multiple API support has been
 		  compiled, the default order of use is JACK, ALSA (Linux) and CORE,
-		  JACK (OS-X).
+		  JACK (OS X).
 
 		  \param api        An optional API id can be specified.
 		  \param clientName An optional Client name can be specified. This
@@ -1338,7 +1338,7 @@ namespace rtmidi {
 		/*!
 		  This function creates a virtual MIDI port to which other
 		  software applications can connect. This type of functionality
-		  is currently only supported by the Macintosh OS-X, any JACK,
+		  is currently only supported by the Macintosh OS X, any JACK,
 		  and Linux ALSA APIs (the function returns an error for the other APIs).
 
 		  \param portName An optional name for the applicaction port that is

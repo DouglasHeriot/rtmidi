@@ -588,7 +588,7 @@ namespace rtmidi {
 // MIDI input.  We convert the system specific time stamps to delta
 // time values.
 
-// OS-X CoreMIDI header files.
+// OS X CoreMIDI header files.
 #include <CoreMIDI/CoreMIDI.h>
 #include <CoreAudio/HostTime.h>
 #include <CoreServices/CoreServices.h>
@@ -1269,7 +1269,7 @@ namespace rtmidi {
 			CFRelease( name );
 			
 			if ( result != noErr ) {
-				throw RTMIDI_ERROR(gettext_noopt("Error creating OS-X MIDI port."),
+				throw RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI port."),
 						   Error::DRIVER_ERROR);
 			}
 			return port;
@@ -1302,7 +1302,7 @@ namespace rtmidi {
 			CFRelease( name );
 			
 			if ( result != noErr ) {
-				throw RTMIDI_ERROR(gettext_noopt("Error creating OS-X MIDI port."),
+				throw RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI port."),
 						   Error::DRIVER_ERROR);
 			}
 			return port;
@@ -1355,7 +1355,7 @@ namespace rtmidi {
 				OSStatus result = MIDIClientCreate(cfname, NULL, NULL, &client );
 				CFRelease(cfname);
 				if ( result != noErr ) {
-					throw RTMIDI_ERROR(gettext_noopt("Error creating OS-X MIDI client object."),
+					throw RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI client object."),
 							   Error::DRIVER_ERROR);
 					return;
 				}
@@ -1529,7 +1529,7 @@ namespace rtmidi {
 
 
 	//*********************************************************************//
-	//  API: OS-X
+	//  API: OS X
 	//  Class Definitions: MidiInCore
 	//*********************************************************************//
 
@@ -1762,7 +1762,7 @@ namespace rtmidi {
 		
 		if ( result != noErr ) {
 			MIDIClientDispose( data->client );
-			error(RTMIDI_ERROR(gettext_noopt("Error creating OS-X MIDI input port."),
+			error(RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI input port."),
 					   Error::DRIVER_ERROR));
 			return;
 		}
@@ -1782,7 +1782,7 @@ namespace rtmidi {
 		if ( result != noErr ) {
 			MIDIPortDispose( port );
 			MIDIClientDispose( data->client );
-			error(RTMIDI_ERROR(gettext_noopt("Error connecting OS-X MIDI input port."),
+			error(RTMIDI_ERROR(gettext_noopt("Error connecting OS X MIDI input port."),
 					   Error::DRIVER_ERROR) );
 			return;
 		}
@@ -1805,7 +1805,7 @@ namespace rtmidi {
 		CFRelease( name );
 		
 		if ( result != noErr ) {
-			error(RTMIDI_ERROR(gettext_noopt("Error creating virtual OS-X MIDI destination."),
+			error(RTMIDI_ERROR(gettext_noopt("Error creating virtual OS X MIDI destination."),
 					   Error::DRIVER_ERROR) );
 			return;
 		}
@@ -1845,7 +1845,7 @@ namespace rtmidi {
 					      data->getEndpoint(),
 					      NULL);
 		if ( result != noErr ) {
-			error(RTMIDI_ERROR(gettext_noopt("Error creating OS-X MIDI port."),
+			error(RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI port."),
 					   Error::DRIVER_ERROR));
 		}
 
@@ -1925,7 +1925,7 @@ namespace rtmidi {
 
 
 	//*********************************************************************//
-	//  API: OS-X
+	//  API: OS X
 	//  Class Definitions: MidiOutCore
 	//*********************************************************************//
 
@@ -2011,7 +2011,7 @@ namespace rtmidi {
 		
 		if ( result != noErr ) {
 			MIDIClientDispose( data->client );
-			error(RTMIDI_ERROR(gettext_noopt("Error creating OS-X MIDI output port."),
+			error(RTMIDI_ERROR(gettext_noopt("Error creating OS X MIDI output port."),
 					   Error::DRIVER_ERROR) );
 			return;
 		}
@@ -2058,7 +2058,7 @@ namespace rtmidi {
 		CFRelease( name );
 		
 		if ( result != noErr ) {
-			error(RTMIDI_ERROR(gettext_noopt("Error creating OS-X virtual MIDI source."),
+			error(RTMIDI_ERROR(gettext_noopt("Error creating OS X virtual MIDI source."),
 					   Error::DRIVER_ERROR) );
 			return;
 		}
