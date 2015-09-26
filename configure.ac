@@ -2,7 +2,10 @@
 AC_INIT(RtMidi, 2.1.0, gary@music.mcgill.ca, rtmidi)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(RtMidi.cpp)
-AC_CONFIG_FILES([rtmidi-config librtmidi.pc Makefile tests/Makefile po/Makefile.in])
+
+# Leaving out po/Makefile.in - add this in to compile with gettext
+# AC_CONFIG_FILES([rtmidi-config librtmidi.pc Makefile tests/Makefile po/Makefile.in])
+AC_CONFIG_FILES([rtmidi-config librtmidi.pc Makefile tests/Makefile])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 
 # Fill GXX with something before test.
@@ -252,8 +255,12 @@ return jack_port_uuid(NULL);
 esac
 AM_CONDITIONAL(COPYDLLS,test -n "$DLLSEARCHPATH")
 AM_CONDITIONAL(HAVE_VIRTUAL_DEVICES,test "$have_virtual_devices" == yes)
-AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.18])
+
+# Only use AM_GNU_GETTEXT if defined - don't require it to be installed to make RtMidi
+m4_ifdef([AM_GNU_GETTEXT], [
+  AM_GNU_GETTEXT([external])
+  AM_GNU_GETTEXT_VERSION([0.18])
+])
 
 CPPFLAGS="$CPPFLAGS $api"
 
