@@ -413,7 +413,7 @@ namespace rtmidi {
 	}
 
 
-	void MidiApi :: error(Error e)
+	void MidiApi :: error(Error e) const
 	{
 		if ( errorCallback_ ) {
 			if ( firstErrorOccurred_ )
@@ -612,6 +612,7 @@ namespace rtmidi {
 		
 		if (isprint(str[0]) && isprint(str[1]) && isprint(str[2]) && isprint(str[3]))
 		{
+			std::cerr << "OSStatus TO STRING: ”" << std::string(str, 4) << "”" << std::endl;
 			return std::string(str, 4);
 		}
 		else
@@ -619,6 +620,8 @@ namespace rtmidi {
 			// no, format it as an integer
 			std::ostringstream out;
 			out << error;
+			
+			std::cerr << "OSStatus TO STRING: ”" << out.str() << "”" << std::endl;
 			return out.str();
 		}
 	}
@@ -1899,7 +1902,7 @@ namespace rtmidi {
 		return NULL;
 	}
 
-	PortList MidiInCore :: getPortList(int capabilities)
+	PortList MidiInCore :: getPortList(int capabilities) const
 	{
 		CoreMidiData *data = static_cast<CoreMidiData *> (apiData_);
 		try {
@@ -2151,7 +2154,7 @@ namespace rtmidi {
 		return NULL;
 	}
 
-	PortList MidiOutCore :: getPortList(int capabilities)
+	PortList MidiOutCore :: getPortList(int capabilities) const
 	{
 		CoreMidiData *data = static_cast<CoreMidiData *> (apiData_);
 		try {
@@ -3292,7 +3295,7 @@ namespace rtmidi {
 		}
 		return NULL;
 	}
-	PortList MidiInAlsa :: getPortList(int capabilities)
+	PortList MidiInAlsa :: getPortList(int capabilities) const
 	{
 		AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
 		try {
@@ -3698,7 +3701,7 @@ namespace rtmidi {
 		}
 		return NULL;
 	}
-	PortList MidiOutAlsa :: getPortList(int capabilities)
+	PortList MidiOutAlsa :: getPortList(int capabilities) const
 	{
 		AlsaMidiData *data = static_cast<AlsaMidiData *> (apiData_);
 		try {
@@ -4355,7 +4358,7 @@ namespace rtmidi{
 
 	}
 
-	PortList MidiInWinMM :: getPortList(int capabilities)
+	PortList MidiInWinMM :: getPortList(int capabilities) const
 	{
 		WinMidiData *data = static_cast<WinMidiData *> (apiData_);
 		if (!data || capabilities != PortDescriptor::INPUT) return PortList();
@@ -4622,7 +4625,7 @@ namespace rtmidi{
 
 	}
 
-	PortList MidiOutWinMM :: getPortList(int capabilities)
+	PortList MidiOutWinMM :: getPortList(int capabilities) const
 	{
 		WinMidiData *data = static_cast<WinMidiData *> (apiData_);
 		if (!data || capabilities != PortDescriptor::OUTPUT) return PortList();
@@ -4794,7 +4797,7 @@ namespace rtmidi {
 			return true;
 		}
 
-		const char ** getPortList(unsigned long flags) {
+		const char ** getPortList(unsigned long flags) const {
 			init();
 			return jack_get_ports(client,
 					      NULL,
@@ -5459,7 +5462,7 @@ namespace rtmidi {
 		return NULL;
 	}
 
-	PortList MidiInJack :: getPortList(int capabilities)
+	PortList MidiInJack :: getPortList(int capabilities) const
 	{
 		JackMidiData *data = static_cast<JackMidiData *> (apiData_);
 		try {
@@ -5675,7 +5678,7 @@ namespace rtmidi {
 		return NULL;
 	}
 
-	PortList MidiOutJack :: getPortList(int capabilities)
+	PortList MidiOutJack :: getPortList(int capabilities) const
 	{
 		JackMidiData *data = static_cast<JackMidiData *> (apiData_);
 		return JackPortDescriptor::getPortList(capabilities | PortDescriptor::OUTPUT,

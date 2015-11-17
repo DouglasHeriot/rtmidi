@@ -571,7 +571,7 @@ namespace rtmidi {
 		  \ref 0 is passed as \ref capabilities parameter.
 		  \sa PortDescriptor::PortCapabilitiers
 		*/
-		virtual PortList getPortList(int capabilities = 0) = 0;
+		virtual PortList getPortList(int capabilities = 0) const = 0;
 
 		//! Pure virtual to return the number of available MIDI ports of the current API.
 		/*!
@@ -644,7 +644,7 @@ namespace rtmidi {
 
 		  \throw Error
 		 */
-		void error( Error e );
+		void error( Error e ) const;
 
 		//! Virtual function to set an error callback function to be invoked when an error has occured.
 		/*!
@@ -660,7 +660,7 @@ namespace rtmidi {
 		bool connected_;
 		std::string errorString_;
 		ErrorInterface * errorCallback_;
-		bool firstErrorOccurred_;
+		mutable bool firstErrorOccurred_;
 	};
 #undef RTMIDI_CLASSNAME
 
@@ -827,7 +827,7 @@ namespace rtmidi {
 		  if \ref PortDescriptor::OUTPUT is passed as \ref
 		  capabilities parameter.
 		*/
-		PortList getPortList(int capabilities = 0)
+		PortList getPortList(int capabilities = 0) const
 		{
 			if (rtapi_) return rtapi_->getPortList(capabilities);
 			if (list && !list->empty()) {
@@ -1433,7 +1433,7 @@ namespace rtmidi {
 		void openVirtualPort( const std::string portName );
 		void openPort( const PortDescriptor & port, const std::string & portName);
 		Pointer<PortDescriptor> getDescriptor(bool local=false);
-		PortList getPortList(int capabilities);
+		PortList getPortList(int capabilities) const;
 		void closePort( void );
 		unsigned int getPortCount( void );
 		std::string getPortName( unsigned int portNumber );
@@ -1458,7 +1458,7 @@ namespace rtmidi {
 		void openVirtualPort( const std::string portName );
 		void openPort( const PortDescriptor & port, const std::string & portName);
 		Pointer<PortDescriptor> getDescriptor(bool local=false);
-		PortList getPortList(int capabilities);
+		PortList getPortList(int capabilities) const;
 		void closePort( void );
 		unsigned int getPortCount( void );
 		std::string getPortName( unsigned int portNumber );
@@ -1483,7 +1483,7 @@ namespace rtmidi {
 		void openVirtualPort( const std::string portName );
 		void openPort( const PortDescriptor & port, const std::string & portName);
 		Pointer<PortDescriptor> getDescriptor(bool local=false);
-		PortList getPortList(int capabilities);
+		PortList getPortList(int capabilities) const;
 		void closePort( void );
 		unsigned int getPortCount( void );
 		std::string getPortName( unsigned int portNumber );
@@ -1506,7 +1506,7 @@ namespace rtmidi {
 		void openVirtualPort( const std::string portName );
 		void openPort( const PortDescriptor & port, const std::string & portName);
 		Pointer<PortDescriptor> getDescriptor(bool local=false);
-		PortList getPortList(int capabilities);
+		PortList getPortList(int capabilities) const;
 		void closePort( void );
 		unsigned int getPortCount( void );
 		std::string getPortName( unsigned int portNumber );
@@ -1534,7 +1534,7 @@ namespace rtmidi {
 		void openVirtualPort( const std::string portName );
 		void openPort( const PortDescriptor & port, const std::string & portName);
 		Pointer<PortDescriptor> getDescriptor(bool local=false);
-		PortList getPortList(int capabilities);
+		PortList getPortList(int capabilities) const;
 		void closePort( void );
 		unsigned int getPortCount( void );
 		std::string getPortName( unsigned int portNumber );
@@ -1556,7 +1556,7 @@ namespace rtmidi {
 		void openVirtualPort( const std::string portName );
 		void openPort( const PortDescriptor & port, const std::string & portName);
 		Pointer<PortDescriptor> getDescriptor(bool local=false);
-		PortList getPortList(int capabilities);
+		PortList getPortList(int capabilities) const;
 		void closePort( void );
 		unsigned int getPortCount( void );
 		std::string getPortName( unsigned int portNumber );
@@ -1581,7 +1581,7 @@ namespace rtmidi {
 		void openVirtualPort( const std::string portName );
 		void openPort( const PortDescriptor & port, const std::string & portName);
 		Pointer<PortDescriptor> getDescriptor(bool local=false);
-		PortList getPortList(int capabilities);
+		PortList getPortList(int capabilities) const;
 		void closePort( void );
 		unsigned int getPortCount( void );
 		std::string getPortName( unsigned int portNumber );
@@ -1603,7 +1603,7 @@ namespace rtmidi {
 		void openVirtualPort( const std::string portName );
 		void openPort( const PortDescriptor & port, const std::string & portName);
 		Pointer<PortDescriptor> getDescriptor(bool local=false);
-		PortList getPortList(int capabilities);
+		PortList getPortList(int capabilities) const;
 		void closePort( void );
 		unsigned int getPortCount( void );
 		std::string getPortName( unsigned int portNumber );
@@ -1631,7 +1631,7 @@ namespace rtmidi {
 		void openVirtualPort( const std::string /*portName*/ ) {}
 		void openPort( const PortDescriptor & port, const & std::string portName) {}
 		Pointer<PortDescriptor> getDescriptor(bool local=false) { return 0; }
-		PortList getPortList(int capabilities) { return PortList(); }
+		PortList getPortList(int capabilities) const { return PortList(); }
 		void closePort( void ) {}
 		unsigned int getPortCount( void ) { return 0; }
 		std::string getPortName( unsigned int portNumber ) { return ""; }
@@ -1653,7 +1653,7 @@ namespace rtmidi {
 		void openVirtualPort( const std::string /*portName*/ ) {}
 		void openPort( const PortDescriptor & port, const & std::string portName) {}
 		Pointer<PortDescriptor> getDescriptor(bool local=false) { return 0; }
-		PortList getPortList(int capabilities) { return PortList(); }
+		PortList getPortList(int capabilities) const { return PortList(); }
 		void closePort( void ) {}
 		unsigned int getPortCount( void ) { return 0; }
 		std::string getPortName( unsigned int /*portNumber*/ ) { return ""; }
